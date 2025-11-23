@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../Hooks/useAuth';
 
 const Login = () => {
@@ -10,11 +10,15 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const location = useLocation();
+  console.log(location);
+  const navigate = useNavigate();
 
   const handleSignInUser = (data) => {
     signInUser(data.email, data.password)
       .then((result) => {
         console.log(result.user);
+        navigate(location.state || '/');
       })
       .catch((error) => {
         console.log(error);
@@ -25,6 +29,7 @@ const Login = () => {
     signInGoogle()
       .then((result) => {
         console.log(result.user);
+        navigate(location.state || '/');
       })
       .catch((error) => {
         console.log(error);
@@ -106,7 +111,11 @@ const Login = () => {
       {/* Register */}
       <p className="text-center mt-4 text-gray-700">
         Don’t have any account?{' '}
-        <Link to={'/register'} className="text-blue-500 font-medium">
+        <Link
+          state={location.state}
+          to={'/register'}
+          className="text-blue-500 font-medium"
+        >
           Register
         </Link>
       </p>

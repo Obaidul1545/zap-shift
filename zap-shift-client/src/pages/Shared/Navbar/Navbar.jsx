@@ -75,7 +75,7 @@ const Navbar = () => {
         ) : (
           <Link to={'/login'}>Login</Link>
         )}
-        <Link to={''} className="btn">
+        <Link to={'/rider'} className="btn">
           Be A Rider
         </Link>
       </div>

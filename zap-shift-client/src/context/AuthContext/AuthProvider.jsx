@@ -32,9 +32,9 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  const updateUser = () => {
+  const updateUser = (profile) => {
     setLoading(true);
-    return updateProfile(auth.currentUser);
+    return updateProfile(auth.currentUser, profile);
   };
 
   const signOutUser = () => {
