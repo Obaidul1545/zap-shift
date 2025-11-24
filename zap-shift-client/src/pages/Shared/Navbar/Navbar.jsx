@@ -27,7 +27,7 @@ const Navbar = () => {
         <NavLink to={''}>Pricing</NavLink>
       </li>
       <li>
-        <NavLink to={''}>Be a Rider</NavLink>
+        <NavLink to={'/sendParcel'}>Send Parcel</NavLink>
       </li>
     </>
   );
@@ -75,7 +75,7 @@ const Navbar = () => {
         ) : (
           <Link to={'/login'}>Login</Link>
         )}
-        <Link to={'/rider'} className="btn">
+        <Link to={'/rider'} className="btn btn-primary text-black">
           Be A Rider
         </Link>
       </div>

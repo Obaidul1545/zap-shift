@@ -7,6 +7,7 @@ import Login from '../pages/Auth/Login/Login';
 import Register from '../pages/Auth/Register/Register';
 import PrivateRoute from './PrivateRoute';
 import Rider from '../pages/Rider/Rider';
+import SendParcel from '../pages/SendParcel/SendParcel';
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
         element: <Coverage></Coverage>,
         loader: () => fetch('/serviceCenter.json'),
       },
+
       {
         path: 'rider',
         element: (
@@ -29,6 +31,15 @@ export const router = createBrowserRouter([
             <Rider></Rider>
           </PrivateRoute>
         ),
+      },
+      {
+        path: 'sendParcel',
+        element: (
+          <PrivateRoute>
+            <SendParcel></SendParcel>
+          </PrivateRoute>
+        ),
+        loader: () => fetch('/serviceCenter.json'),
       },
     ],
   },
