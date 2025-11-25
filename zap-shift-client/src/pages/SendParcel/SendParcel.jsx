@@ -2,6 +2,8 @@ import React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useLoaderData } from 'react-router';
 import Swal from 'sweetalert2';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import useAuth from '../../Hooks/useAuth';
 
 const SendParcel = () => {
   const {
@@ -10,6 +12,10 @@ const SendParcel = () => {
     control,
     formState: { errors },
   } = useForm();
+  const { user } = useAuth();
+
+  const axiosSecure = useAxiosSecure();
+
   const serviceCenter = useLoaderData();
   const regionsDuplicate = serviceCenter.map((r) => r.region);
   const regions = [...new Set(regionsDuplicate)];
@@ -55,12 +61,17 @@ const SendParcel = () => {
       confirmButtonText: 'I Agree!',
     }).then((result) => {
       if (result.isConfirmed) {
+        // save the parcel info to the database
+        axiosSecure.post('/parcels', data).then((res) => {
+          console.log(res.data);
+          Swal.fire({
+            title: 'Send!',
+            text: 'Your file has been success.',
+            icon: 'success',
+          });
+        });
+
         //
-        // Swal.fire({
-        //   title: 'Deleted!',
-        //   text: 'Your file has been deleted.',
-        //   icon: 'success',
-        // });
       }
     });
   };
@@ -143,6 +154,7 @@ const SendParcel = () => {
             <input
               type="email"
               placeholder="Sender Email"
+              defaultValue={user?.email}
               {...register('senderEmail')}
               className="input input-bordered w-full mb-4"
             />
