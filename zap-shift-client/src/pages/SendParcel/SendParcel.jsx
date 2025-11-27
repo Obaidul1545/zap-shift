@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import useAuth from '../../Hooks/useAuth';
@@ -13,8 +13,9 @@ const SendParcel = () => {
     formState: { errors },
   } = useForm();
   const { user } = useAuth();
-
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
+
 
   const serviceCenter = useLoaderData();
   const regionsDuplicate = serviceCenter.map((r) => r.region);
@@ -28,6 +29,7 @@ const SendParcel = () => {
     return districts;
   };
 
+  // parcel send
   const handleParcelSend = (data) => {
     const isDocument = data.parcelType === 'Document';
     const isSameDistrict = data.senderDistrict === data.receiverDistrict;
@@ -61,6 +63,7 @@ const SendParcel = () => {
       confirmButtonText: 'I Agree!',
     }).then((result) => {
       if (result.isConfirmed) {
+        navigate('/dashboard/my-parcels');
         // save the parcel info to the database
         axiosSecure.post('/parcels', data).then((res) => {
           console.log(res.data);
