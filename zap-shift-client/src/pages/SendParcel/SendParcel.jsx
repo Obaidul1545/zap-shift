@@ -16,7 +16,6 @@ const SendParcel = () => {
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
 
-
   const serviceCenter = useLoaderData();
   const regionsDuplicate = serviceCenter.map((r) => r.region);
   const regions = [...new Set(regionsDuplicate)];
@@ -150,6 +149,7 @@ const SendParcel = () => {
               type="text"
               placeholder="Sender Name"
               {...register('senderName')}
+              defaultValue={user?.displayName}
               className="input input-bordered w-full mb-4"
             />
 
