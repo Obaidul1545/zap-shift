@@ -1,12 +1,39 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import agentPending from '../../assets/agentPending.png';
+import useAuth from '../../Hooks/useAuth';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import { useLoaderData } from 'react-router';
+import Swal from 'sweetalert2';
 
 const Rider = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, control, reset } = useForm();
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
-  const onSubmit = (data) => {
+  const serviceCenter = useLoaderData();
+  console.log(serviceCenter);
+  const regionsDuplicate = serviceCenter.map((r) => r.region);
+  const regions = [...new Set(regionsDuplicate)];
+  const riderRegion = useWatch({ control, name: 'riderRegion' });
+  const distritsByRegion = (region) => {
+    const regionsDistricts = serviceCenter.filter((c) => c.region === region);
+    const districts = regionsDistricts.map((d) => d.district);
+    return districts;
+  };
+
+  const handleRiderApplication = (data) => {
     console.log('Rider Data:', data);
-    reset();
+    axiosSecure.post('/riders', data).then((res) => {
+      if (res.data.insertedId) {
+        // toast
+        console.log('Rider info save database');
+        Swal.fire({
+          title: 'Send!',
+          text: 'Your file has been submit.',
+          icon: 'success',
+        });
+      }
+    });
   };
 
   return (
@@ -24,9 +51,13 @@ const Rider = () => {
         <div>
           <h3 className="text-xl font-semibold mb-4">Tell us about yourself</h3>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={handleSubmit(handleRiderApplication)}
+            className="space-y-4"
+          >
             {/* Row 1 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label className="font-medium">Your Name:</label>
               <input
                 type="text"
                 placeholder="Your Name"
@@ -34,6 +65,7 @@ const Rider = () => {
                 className="input input-bordered w-full"
               />
 
+              <label className="font-medium">Your Age:</label>
               <input
                 type="number"
                 placeholder="Your Age"
@@ -42,8 +74,8 @@ const Rider = () => {
               />
             </div>
 
-            {/* Row 2 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label className="font-medium">Your Email:</label>
               <input
                 type="email"
                 placeholder="Your Email"
@@ -51,23 +83,49 @@ const Rider = () => {
                 className="input input-bordered w-full"
               />
 
+              <label className="font-medium">
+                Your Driving license Number:
+              </label>
+              <input
+                type="number"
+                placeholder="Your Driving license Number"
+                {...register('licenseNumber')}
+                className="input input-bordered w-full"
+              />
+            </div>
+
+            {/* Row 2 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label className="font-medium">Your Region:</label>
               <select
-                {...register('district')}
-                className="select select-bordered w-full"
+                {...register('riderRegion')}
+                className="select select-bordered w-full mb-4"
               >
-                <option disabled selected>
-                  Select your District
-                </option>
-                <option>Dhaka</option>
-                <option>Chittagong</option>
-                <option>Rajshahi</option>
-                <option>Khulna</option>
-                <option>Barishal</option>
+                <option>Select your Region</option>
+                {regions.map((r, i) => (
+                  <option key={i} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+
+              <label className="font-medium">Your District:</label>
+              <select
+                {...register('riderDistrict')}
+                className="select select-bordered w-full mb-4"
+              >
+                <option>Select your District</option>
+                {distritsByRegion(riderRegion).map((r, i) => (
+                  <option key={i} value={r}>
+                    {r}
+                  </option>
+                ))}
               </select>
             </div>
 
             {/* Row 3 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label className="font-medium">Your NID No:</label>
               <input
                 type="text"
                 placeholder="NID No"
@@ -75,29 +133,36 @@ const Rider = () => {
                 className="input input-bordered w-full"
               />
 
+              <label className="font-medium">Your Phone Number:</label>
               <input
-                type="text"
+                type="number"
                 placeholder="Contact"
                 {...register('contact')}
                 className="input input-bordered w-full"
               />
             </div>
 
-            {/* Warehouse */}
-            <select
-              {...register('warehouse')}
-              className="select select-bordered w-full"
-            >
-              <option disabled selected>
-                Select warehouse
-              </option>
-              <option>Mirpur Warehouse</option>
-              <option>Uttara Warehouse</option>
-              <option>Banani Warehouse</option>
-            </select>
+            {/* bike info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label className="font-medium">Bike Brand model and year:</label>
+              <input
+                type="text"
+                placeholder="Bike Brand model and year"
+                {...register('BikeName')}
+                className="input input-bordered w-full"
+              />
+
+              <label className="font-medium">Bike Registration Number:</label>
+              <input
+                type="number"
+                placeholder="Bike Registration Number"
+                {...register('BikeRegNumber')}
+                className="input input-bordered w-full"
+              />
+            </div>
 
             <button className="btn bg-lime-400 hover:bg-lime-500 w-full text-black">
-              Submit
+              Apply a Rider
             </button>
           </form>
         </div>
