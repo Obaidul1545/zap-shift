@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { FaUserCheck } from 'react-icons/fa';
+import { FaEye, FaUserCheck } from 'react-icons/fa';
 import { RiUserUnfollowFill } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
@@ -74,6 +74,9 @@ const ApproveRiders = () => {
                 </td>
                 <td>{rider.riderDistrict}</td>
                 <td>
+                  <button className="btn">
+                    <FaEye></FaEye>
+                  </button>
                   <button
                     onClick={() => handleApproval(rider)}
                     className="btn bg-green-300"
