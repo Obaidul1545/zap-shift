@@ -2,9 +2,11 @@ import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../Hooks/useAuth';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
 const Login = () => {
   const { signInUser, signInGoogle } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const {
     register,
     handleSubmit,
@@ -28,8 +30,18 @@ const Login = () => {
   const handleSignInGoogle = () => {
     signInGoogle()
       .then((result) => {
-        console.log(result.user);
-        navigate(location.state || '/');
+        // create user database
+        const userInfo = {
+          email: result.user.email,
+          displayName: result.user.displayName,
+          photoURL: result.user.photoURL,
+        };
+        axiosSecure.post('/users', userInfo).then((res) => {
+          if (res.data.insertedId) {
+            console.log('create google user in the database ');
+          }
+          navigate(location.state || '/');
+        });
       })
       .catch((error) => {
         console.log(error);

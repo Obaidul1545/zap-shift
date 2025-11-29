@@ -4,17 +4,17 @@ import { FcGoogle } from 'react-icons/fc';
 import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../Hooks/useAuth';
 import axios from 'axios';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
 const Register = () => {
   const { registerUser, signInGoogle, updateUser } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const location = useLocation();
-  console.log(location);
   const navigate = useNavigate();
 
   const handleRegister = (data) => {
@@ -34,10 +34,23 @@ const Register = () => {
         axios.post(imageApiUrl, formData).then((res) => {
           console.log('after upload', res.data.data.url);
 
+          const photoURL = res.data.data.url;
+
+          // create user in the database
+          const userInfo = {
+            email: data.email,
+            displayName: data.name,
+            photoURL: photoURL,
+          };
+          axiosSecure.post('/users', userInfo).then((res) => {
+            if (res.data.insertedId) {
+              console.log('create user in the database ');
+            }
+          });
           // update user profile firebase
           const userProfile = {
             displayName: data.name,
-            photoURL: res.data.data.url,
+            photoURL: photoURL,
           };
           updateUser(userProfile)
             .then(() => {
@@ -56,7 +69,19 @@ const Register = () => {
     signInGoogle()
       .then((result) => {
         console.log(result.user);
-        navigate(location.state || '/');
+
+        // create user database
+        const userInfo = {
+          email: result.user.email,
+          displayName: result.user.displayName,
+          photoURL: result.user.photoURL,
+        };
+        axiosSecure.post('/users', userInfo).then((res) => {
+          if (res.data.insertedId) {
+            console.log('create google user in the database ');
+          }
+          navigate(location.state || '/');
+        });
       })
       .catch((error) => {
         console.log(error);

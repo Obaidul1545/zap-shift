@@ -9,10 +9,13 @@ const axiosSecure = axios.create({
 const useAxiosSecure = () => {
   const { user, signOutUser } = useAuth();
   const navigate = useNavigate();
-  console.log(user.accessToken);
+
   useEffect(() => {
     const reqInterceptor = axiosSecure.interceptors.request.use((config) => {
-      config.headers.Authorization = `Bearer ${user?.accessToken}`;
+      const token = user?.accessToken;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
       return config;
     });
 
@@ -24,7 +27,7 @@ const useAxiosSecure = () => {
       (error) => {
         console.log(error);
 
-        const statusCode = error.status;
+        const statusCode = error.response?.status;
         if (statusCode === 401 || statusCode === 403) {
           signOutUser().then(() => {
             navigate('/login');
@@ -38,7 +41,7 @@ const useAxiosSecure = () => {
       axiosSecure.interceptors.request.eject(reqInterceptor);
       axiosSecure.interceptors.response.eject(resInterceptor);
     };
-  }, [user]);
+  }, [user, navigate, signOutUser]);
   return axiosSecure;
 };
 

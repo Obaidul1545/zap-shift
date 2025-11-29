@@ -25,6 +25,7 @@ const PaymentHistory = () => {
               <th></th>
               <th>Name</th>
               <th>Cost</th>
+              <th>Pay Time</th>
               <th>Transaction Id</th>
             </tr>
           </thead>
@@ -34,6 +35,7 @@ const PaymentHistory = () => {
                 <th>{i + 1}</th>
                 <td>{payment.parcelName}</td>
                 <td>{payment.amount}</td>
+                <td>{new Date(payment.paidAt).toLocaleString()}</td>
                 <td>{payment.transactionId}</td>
               </tr>
             ))}
