@@ -27,8 +27,7 @@ app.use(cors());
 app.use(express.json());
 
 const verifyFBToken = async (req, res, next) => {
-  const token = req.headers?.authorizaion;
-  console.log(token);
+  const token = req.headers?.authorization;
   if (!token) {
     return res.status(401).send({ message: 'unauthorized access' });
   }
@@ -56,8 +55,24 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const db = client.db('zap_shift_db');
+    const usersCollection = db.collection('users');
     const parcelsCollection = db.collection('parcels');
     const paymentCollection = db.collection('payments');
+
+    // users releted apis
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      user.role = 'user';
+      user.createdAt = new Date();
+
+      const email = user.email;
+      const userExists = await usersCollection.findOne({ email });
+      if (userExists) {
+        res.send({ message: 'Already user Exists' });
+      }
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
 
     //parcel api
     app.get('/parcels', async (req, res) => {
@@ -219,7 +234,7 @@ async function run() {
           res.status(403).send({ message: 'forbidden access' });
         }
       }
-      const cursor = paymentCollection.find(query);
+      const cursor = paymentCollection.find(query).sort({ paidAt: -1 });
       const result = await cursor.toArray();
       res.send(result);
     });
