@@ -101,7 +101,14 @@ const MyParcels = () => {
                     </div>
                   )}
                 </td>
-                <td>{parcel.trackingId}</td>
+                <td>
+                  <Link
+                    className="text-blue-400 "
+                    to={`/parcel-track/${parcel.trackingId}`}
+                  >
+                    {parcel.trackingId}
+                  </Link>
+                </td>
                 <td>{parcel.deliveryStatus}</td>
                 <td className="space-x-2">
                   <button className="btn btn-square hover:bg-primary">

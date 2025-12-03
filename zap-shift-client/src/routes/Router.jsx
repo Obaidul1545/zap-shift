@@ -20,6 +20,8 @@ import AdminRoute from './AdminRoute';
 import AssignRiders from '../pages/Dashboard/AssignRiders/AssignRiders';
 import AssignedDeliveries from '../pages/Dashboard/AssignedDeliveries/AssignedDeliveries';
 import RiderRoute from './RiderRoute';
+import CompletedDeliveries from '../pages/Dashboard/CompletedDeliveries/CompletedDeliveries';
+import ParcelTrack from '../pages/ParcelTrack/ParcelTrack';
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +37,10 @@ export const router = createBrowserRouter([
         element: <Coverage></Coverage>,
         loader: () => fetch('/serviceCenter.json'),
       },
-
+      {
+        path: 'parcel-track/:trackingId',
+        element: <ParcelTrack></ParcelTrack>,
+      },
       {
         path: 'rider',
         element: (
@@ -104,6 +109,14 @@ export const router = createBrowserRouter([
         element: (
           <RiderRoute>
             <AssignedDeliveries></AssignedDeliveries>
+          </RiderRoute>
+        ),
+      },
+      {
+        path: 'completed-deliveries',
+        element: (
+          <RiderRoute>
+            <CompletedDeliveries></CompletedDeliveries>
           </RiderRoute>
         ),
       },

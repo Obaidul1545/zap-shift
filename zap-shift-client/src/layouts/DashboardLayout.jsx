@@ -1,5 +1,7 @@
 import { Link, NavLink, Outlet } from 'react-router';
 import { CiDeliveryTruck } from 'react-icons/ci';
+import { SiGoogletasks } from 'react-icons/si';
+
 import {
   FaMotorcycle,
   FaRegCreditCard,
@@ -107,19 +109,34 @@ const DashboardLayout = () => {
 
             {/* rider only links */}
             {role === 'rider' && (
-              <li>
-                <NavLink
-                  to={'/dashboard/assigned-deliveries'}
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Assigned Deliveries"
-                >
-                  <FaTasks></FaTasks>
+              <>
+                <li>
+                  <NavLink
+                    to={'/dashboard/assigned-deliveries'}
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Assigned Deliveries"
+                  >
+                    <FaTasks></FaTasks>
 
-                  <span className="is-drawer-close:hidden">
-                    Assigned Deliveries
-                  </span>
-                </NavLink>
-              </li>
+                    <span className="is-drawer-close:hidden">
+                      Assigned Deliveries
+                    </span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/dashboard/completed-deliveries'}
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Completed Deliveries"
+                  >
+                    <SiGoogletasks />
+
+                    <span className="is-drawer-close:hidden">
+                      Completed Deliveries
+                    </span>
+                  </NavLink>
+                </li>
+              </>
             )}
 
             {/* admin only links */}

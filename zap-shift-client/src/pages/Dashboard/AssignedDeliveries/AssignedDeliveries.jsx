@@ -17,8 +17,17 @@ const AssignedDeliveries = () => {
     },
   });
 
-  const handleAcceptDelivery = (parcel) => {
-    const statusInfo = { deliveryStatus: 'rider_arriving' };
+  const handleDeliveryStatusUpdate = (parcel, status) => {
+    const statusInfo = {
+      deliveryStatus: status,
+      riderId: parcel.riderId,
+      trackingId: parcel.trackingId,
+    };
+
+    const message = `Parcel Status is updated with ${status
+      .split('_')
+      .join(' ')}`;
+
     axiosSecure
       .patch(`/parcels/${parcel._id}/status`, statusInfo)
       .then((res) => {
@@ -27,7 +36,7 @@ const AssignedDeliveries = () => {
           Swal.fire({
             position: 'top-end',
             icon: 'success',
-            title: `Thank You for accepting.`,
+            title: message,
             showConfirmButton: false,
             timer: 2000,
           });
@@ -53,7 +62,7 @@ const AssignedDeliveries = () => {
           </thead>
           <tbody>
             {parcels.map((parcel, i) => (
-              <tr>
+              <tr key={parcel._id}>
                 <th>{i + 1}</th>
                 <td>{parcel.parcelName}</td>
                 <td>{parcel.senderDistrict}</td>
@@ -62,7 +71,9 @@ const AssignedDeliveries = () => {
                   {parcel.deliveryStatus === 'driver_assigned' ? (
                     <>
                       <button
-                        onClick={() => handleAcceptDelivery(parcel)}
+                        onClick={() =>
+                          handleDeliveryStatusUpdate(parcel, 'rider_arriving')
+                        }
                         className="btn btn-primary text-black"
                       >
                         Accept
@@ -76,10 +87,20 @@ const AssignedDeliveries = () => {
                   )}
                 </td>
                 <td>
-                  <button className="btn btn-primary text-black">
+                  <button
+                    onClick={() =>
+                      handleDeliveryStatusUpdate(parcel, 'parcel_picked_up')
+                    }
+                    className="btn btn-primary text-black"
+                  >
                     confrim pickup
                   </button>
-                  <button className="btn btn-primary text-black">
+                  <button
+                    onClick={() =>
+                      handleDeliveryStatusUpdate(parcel, 'parcel_delivered')
+                    }
+                    className="btn btn-primary text-black"
+                  >
                     confrim delivery
                   </button>
                 </td>
