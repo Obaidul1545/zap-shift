@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet } from 'react-router';
 import { CiDeliveryTruck } from 'react-icons/ci';
 import { SiGoogletasks } from 'react-icons/si';
+import logoImg from '../assets/logo.png';
 
 import {
   FaMotorcycle,
@@ -11,6 +12,7 @@ import {
 
 import useRole from '../Hooks/useRole';
 import { TbPackageExport } from 'react-icons/tb';
+import Logo from '../components/Logo/Logo';
 
 const DashboardLayout = () => {
   const { role } = useRole();
@@ -57,9 +59,22 @@ const DashboardLayout = () => {
           {/* Sidebar content here */}
           <ul className="menu w-full grow">
             {/* List item */}
+
             <li>
               <Link
                 to={'/'}
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+              >
+                <img src={logoImg} alt="" />
+                <span className="is-drawer-close:hidden text-3xl font-semibold">
+                  Zap Shift
+                </span>
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to={'/dashboard'}
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                 data-tip="Homepage"
               >

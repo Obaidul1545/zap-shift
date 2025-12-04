@@ -35,6 +35,9 @@ const Navbar = () => {
           <li>
             <NavLink to={'/dashboard/my-parcels'}>My Parcels</NavLink>
           </li>
+          <li>
+            <NavLink to={'/dashboard'}>Dashboard</NavLink>
+          </li>
         </>
       )}
     </>
@@ -81,9 +84,11 @@ const Navbar = () => {
             Log Out
           </a>
         ) : (
-          <Link to={'/login'}>Login</Link>
+          <Link to={'/login'} className="btn ml-2">
+            Login
+          </Link>
         )}
-        <Link to={'/rider'} className="btn btn-primary text-black">
+        <Link to={'/rider'} className="btn btn-primary text-black ml-2">
           Be A Rider
         </Link>
       </div>

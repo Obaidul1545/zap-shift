@@ -5,25 +5,31 @@ import useAxios from '../../Hooks/useAxios';
 
 const ParcelTrack = () => {
   const { trackingId } = useParams();
-  const { axiosInstance } = useAxios();
+  const axiosInstance = useAxios();
 
   const { data: trackings = [] } = useQuery({
     queryKey: ['tracking', trackingId],
     queryFn: async () => {
+      console.log('object');
       const res = await axiosInstance.get(`/trackings/${trackingId}/logs`);
+      console.log(res.data);
+
       return res.data;
     },
   });
-  console.log(trackings);
-  console.log(trackingId);
+  // console.log(trackings);
+  // console.log(trackingId);
   return (
     <div className="my-10">
       <h2 className="text-2xl p-2">Tracking Your Parcel: {trackingId}</h2>
+      <h2 className="text-2xl p-2">logs so far: {trackings.length}</h2>
 
       <ul className="timeline timeline-vertical my-10">
         {trackings.map((log) => (
           <li key={log._id}>
-            <div className="timeline-start">{log.createdAt}</div>
+            <div className="timeline-start">
+              {new Date(log.createdAt).toLocaleString()}
+            </div>
             <div className="timeline-middle">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -38,9 +44,7 @@ const ParcelTrack = () => {
                 />
               </svg>
             </div>
-            <div className="timeline-end timeline-box">
-              First Macintosh computerrrrr
-            </div>
+            <div className="timeline-end timeline-box">{log.details}</div>
             <hr />
           </li>
         ))}
